@@ -1,0 +1,4 @@
+http://example.com/2023/06/06/test-img/
+http://example.com/2023/06/06/test/
+http://example.com/2023/06/06/hello-world/
+http://example.com/
