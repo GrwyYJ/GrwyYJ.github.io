@@ -1,5 +1,5 @@
 ---
-title: 我的 VS Code 插件清单
+title: VS Code 插件清单
 published: 2026-05-24
 description: 整理一下目前安装的所有 VS Code 扩展，区分启用和禁用，按分类逐一说明用途
 tags: [VS Code, 工具, 开发环境]
@@ -7,8 +7,6 @@ category: 工具
 draft: false
 lang: zh_CN
 ---
-研究生期间断断续续攒了 120+ 个 VS Code 插件，趁毕业整理博客的机会系统地清点一遍。既是记录，也方便以后换环境时参考。
-
 文中用 ✅ 表示当前启用的插件，⛔ 表示已禁用但保留着没卸载的。
 
 ## AI & 编程助手
@@ -196,15 +194,3 @@ lang: zh_CN
 | ✅    | **XML**          | XML 格式化与验证         |
 | ✅    | **LeetCode**     | 在 VS Code 中刷 LeetCode |
 | ✅    | **XMind Viewer** | 查看 XMind 思维导图文件  |
-
-## 做个减法
-
-120+ 个插件，禁用了 46 个。启用率大概 60% 出头，不算健康。
-
-禁用的一般是这几类：
-
-- **特定课程或项目装的**：如 Keil 助手、Jupyter 全家桶、Java 调试工具。项目做完就再也没打开过
-- **模块功能被内置替代的**：如 markdownlint（Markdown All in One 够用了）、Path Intellisense（VS Code 自带路径提示）
-- **留作备用的**：如 Vetur（Vue 2 旧项目）、SVN（偶尔签出）、GitHub Copilot（跟 Claude Code 交替用）
-
-有空应该来一轮大扫除，把确定不会再用的直接卸载。

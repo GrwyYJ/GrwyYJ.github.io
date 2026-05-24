@@ -7,7 +7,7 @@ category: 随笔
 draft: false
 lang: zh_CN
 nextTitle: 为什么选择 Astro + Fuwari
-nextSlug: why-astro
+nextSlug: 2026-05-22-why-astro
 ---
 本科毕业答辩完成后，创建了我的第一个blog；
 

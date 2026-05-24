@@ -7,7 +7,7 @@ category: 技术
 draft: false
 lang: zh_CN
 prevTitle: 为什么选择 Astro + Fuwari
-prevSlug: why-astro
+prevSlug: 2026-05-22-why-astro
 ---
 
 前两篇讲了重启博客的动机和技术选型，这篇聚焦在"怎么让它在网上被别人访问到"——也就是部署。

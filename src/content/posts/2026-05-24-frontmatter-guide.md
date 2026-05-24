@@ -1,14 +1,13 @@
 ---
-title: 博客文章开头的 --- 到底是什么
+title: 元数据
 published: 2026-05-24
-description: 解释 YAML frontmatter 是什么、每个字段有什么用、哪些必填哪些可选
+description: YAML frontmatter 
 tags: [博客, Markdown, Astro]
 category: 技术
 draft: false
 lang: zh_CN
 ---
-
-如果你看过我博客的 Markdown 源文件，会发现每篇文章开头都有这样一段：
+博客的 Markdown 源文件，每篇文章开头都有这样一段：
 
 ```markdown
 ---
@@ -22,17 +21,17 @@ lang: zh_CN
 ---
 ```
 
-两个 `---` 之间的部分叫 **frontmatter**（直译就是"前面的内容"），用 YAML 格式写。它本质上是一段元数据——描述这篇文章"是什么"，而不是"写了什么"。
+两个 `---` 之间的部分叫 **frontmatter**（直译就是"前面的内容"），用 YAML 格式写。它本质上是一段元数据——描述这篇文章"是什么"
 
-## 为什么要有 frontmatter
+## 为什么
 
-没有 frontmatter 的话，博客系统怎么知道这篇文章的标题是什么、什么时候发的、属于哪个分类？它当然可以自己去猜（比如把文件名叫当标题、用文件修改时间当发布日期），但那不可靠。
+没有 frontmatter 的话，博客系统怎么知道这篇文章的标题是什么、什么时候发的、属于哪个分类
 
 frontmatter 就是你自己把这些信息告诉系统的地方。Astro 在构建时会解析这段 YAML，然后把数据注入到页面模板中——标题显示在浏览器标签栏和文章列表里，日期用来排序，标签用来生成分类页面，等等。
 
 ## 字段说明
 
-以下是这个博客（Fuwari + Astro）支持的所有字段，直接扒的类型定义。
+以下是这个博客（Fuwari + Astro）支持的所有字段，由 `src\content\config.ts`定义。
 
 ### title（必填）
 
