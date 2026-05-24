@@ -1,0 +1,189 @@
+---
+title: 为什么选择 Astro + Fuwari
+published: 2026-05-22
+description: 新一代静态博客框架选型、主题对比，以及项目搭建和配置的全过程
+tags: [博客, Astro, Hexo, Fuwari]
+category: 技术
+draft: false
+lang: zh_CN
+prevTitle: 重启博客
+prevSlug: restart-blog
+nextTitle: GitHub Pages 自动化部署完全指南
+nextSlug: github-pages-deploy
+---
+
+## 为什么要重写，而不是恢复
+
+旧博客是基于 Hexo 6.3.0 + Butterfly 3.8.2 的。说实话，Hexo 本身没什么不好——插件生态成熟、主题丰富、社区活跃。如果只是想把旧内容搬回来，继续用 Hexo 是最快的。
+
+但既然源代码已经丢了，文章内容也已过时，与其费力还原一个三年前的旧环境，不如趁这个机会重新选型。技术栈三年不更新在 frontend 世界里已经算"上古时期"了，这三年前端生态变化不小。
+
+## 框架选型
+
+新一代静态站点生成器里，重点看了这几个：
+
+### Astro
+
+Astro 最大的卖点是 **"零 JS 默认"**——页面默认不加载任何 JavaScript，只有需要交互的组件才会按需加载水合（hydration）。这对内容型站点（博客、文档）来说是很契合的设计哲学：文章页面不需要 React/Vue 运行时，纯 HTML 就够用。Astro 也支持服务端渲染和静态生成两种模式，内容站用静态生成（SSG）即可，构建产物就是一堆 HTML/CSS/JS 文件，扔到任何静态托管服务上都能跑。
+
+除此之外，Astro 直接支持 Markdown 和 MDX 作为页面源，也可以无缝集成 React、Vue、Svelte 等组件——在同一个项目中混用不同框架的组件是 Astro 的特色之一。
+
+Astro 自身也带有 Islands 架构（岛屿架构）的概念：页面上的交互组件可以独立水合，互不影响。这对于博客来说不是必须的，但如果你想在文章里嵌入一个交互式 demo 或者图表工具，这个能力就很有用。
+
+### Hugo
+
+Hugo 以构建速度闻名——几千篇文章的项目也能在几秒内构建完毕。但它的模板语言是 Go 的 `text/template`，和前端生态不太一样，学起来需要额外成本。主题市场虽然丰富，但质量参差不齐，且修改主题需要深入 Go 模板的写法。对我来说学习曲线比收益大。
+
+### Vitepress
+
+Vitepress 基于 Vite 和 Vue，开发体验很好，构建也快。但它的定位偏文档站点，虽然也能做博客，但博客相关的开箱功能（标签、分类、归档、RSS）需要自己写或者找第三方插件。更适合团队内部文档站。
+
+### AstroPaper
+
+AstroPaper 是 Astro 生态里 GitHub 星数最高的博客主题之一，设计简洁、性能优秀。但功能相对克制——没有暗色模式切换（后来加了）、没有全文搜索、评论系统需要额外集成。作为基础主题很好，但想要对标 Butterfly 的完整功能需要自己动手补齐。
+
+### 最终选择：Fuwari
+
+Fuwari （[GitHub](https://github.com/saicaca/fuwari)）是一个基于 Astro 的博客主题，出自中国开发者 saicaca。选中它是因为：
+
+- **功能完整**：暗色模式、Pagefind 全文搜索、标签分类、归档、代码高亮、RSS、Sitemap 全都有，开箱即用
+- **设计感**：卡片式布局、毛玻璃效果（Glassmorphism），视觉上比大多数 Hexo 主题现代
+- **配置友好**：集中式配置（`src/config.ts`），不需要改模板代码
+- **与 Butterfly 体验最接近**：虽然框架不同，但功能集和对标 Butterfly 的完整度最高，迁移成本最低
+
+## 主题对比一览
+
+| 特性 | Fuwari | AstroPaper | Hugo PaperMod | Vitepress |
+|------|--------|------------|---------------|-----------|
+| 暗色模式 | ✅ | ✅（后来加入） | ✅ | ✅ |
+| 全文搜索 | ✅ Pagefind | ❌ | ✅（Fuse.js） | ✅ |
+| 标签分类 | ✅ | ✅ | ✅ | 需手动 |
+| RSS | ✅ | ✅ | ✅ | ✅ |
+| 代码高亮 | ✅ Expressive Code | ✅ | ✅ | ✅ |
+| KaTeX 公式 | ✅ | ❌ | ❌ | ❌ |
+| 图片画廊 | ✅ PhotoSwipe | ❌ | ❌ | ❌ |
+| 页面切换动画 | ✅ SWUP | ❌ | ❌ | ❌ |
+
+## 搭建过程
+
+### 获取项目
+
+Fuwari 提供了模板仓库，直接从 GitHub 拉下来：
+
+```bash
+git clone --depth 1 https://github.com/saicaca/fuwari.git
+cd fuwari
+pnpm install
+```
+
+`--depth 1` 只拉取最新一次 commit，跳过完整 git 历史——模板仓库的提交记录对最终项目没有意义，少拉几百 KB 是一回事，主要是避免把别人的 git 历史带进来，后续推送自己仓库时少一些麻烦。
+
+Fuwari 推荐 `pnpm` 作为包管理器，项目根目录有 `preinstall` 脚本会检查这一点——如果用 `npm install` 会直接报错退出。
+
+依赖装完之后，`pnpm dev` 启动本地开发服务器，默认端口 `4321`，浏览器打开就能看到默认的博客页面。
+
+### 配置站点信息
+
+Fuwari 的配置集中在 `src/config.ts`，用 TypeScript 的 `export const` 导出，类型定义在 `src/types/config.ts` 里。如果是第一次用 TypeScript 项目，改了类型报错可能会不知所措——其实 Fuwari 的类型定义比较严格，好处是配置错了编译阶段就能发现。
+
+需要改的几项：
+
+```typescript
+export const siteConfig: SiteConfig = {
+  title: "Grey or Grwy",        // 浏览器标签栏显示的标题
+  subtitle: "Grwy 的博客",       // 首页副标题
+  lang: "zh_CN",                 // 语言，影响日期格式等
+};
+```
+
+导航栏、社交链接、个人简介也在这同一个文件里。社交链接支持 GitHub、Twitter、Email 等常见平台。
+
+头像这里一开始踩了个坑——我引用了一个外部 URL，构建时头像加载不出来。把图片下载到 `src/assets/` 目录下，用本地路径引用就好了。Fuwari 对本地资源的路径解析比较严格，外部 URL 在某些构建场景下可能不会正确处理。
+
+### 定制主题样式
+
+Fuwari 基于 Tailwind CSS，配色变量集中在 `src/styles/variables.css`：
+
+```css
+:root {
+  --primary: #...;       /* 主色 */
+  --background: #...;     /* 背景色 */
+  --codeblock-bg: #...;   /* 代码块背景 */
+}
+```
+
+我改了这几处：
+- **主色**：从默认的蓝色调换成偏青灰的色调，视觉上更柔和
+- **代码块**：暗色模式下的背景加深，提高代码和背景的对比度
+- **正文排版**：字号从默认调大了一档，长文阅读不容易累
+
+Tailwind 的好处是改样式可以直接在 HTML/astro 组件里用 utility class，不用切到 CSS 文件再回去找对应的选择器。不过 Fuwari 的结构化程度比较高，大部分全局样式集中在那几份 CSS 文件里，改起来也方便。
+
+### 关于 Astro 配置文件
+
+`astro.config.mjs` 是 Astro 项目的核心配置。我这里没有做太大改动——Fuwari 已经集成了需要的插件：
+
+```javascript
+// astro.config.mjs （节选）
+export default defineConfig({
+  site: "https://grwyyj.github.io/",
+  base: "/",
+  trailingSlash: "always",
+  integrations: [
+    tailwind({ nesting: true }),
+    svelte(),
+    sitemap(),
+    expressiveCode({...}),   // 代码高亮
+    icon({...}),              // 图标库
+    swup({...}),              // 页面切换动画
+  ],
+});
+```
+
+几个值得注意的点：
+
+- **`site`** 必须设为最终部署的 URL，否则 Sitemap 和 RSS 生成会指向错误地址
+- **`trailingSlash: "always"`**：所有 URL 末尾加斜杠，对 GitHub Pages 更友好（否则可能 404）
+- **`expressiveCode`**：Fuwari 的代码高亮由 Expressive Code 提供，比 Hexo 的 highlight.js 功能更多——支持行号、代码折叠、语言标签、自定义复制按钮
+
+### Markdown 与文章写作
+
+Fuwari 的文章放在 `src/content/posts/`，用 Markdown 加 frontmatter：
+
+```markdown
+---
+title: 文章标题
+published: 2026-05-22
+description: 文章描述
+tags: [标签1, 标签2]
+category: 分类名
+draft: true
+lang: zh_CN
+---
+```
+
+`draft: true` 的文章在构建时会被跳过，方便写了一半的文章先存着不发布。发布时改成 `false` 即可。
+
+创建新文件可以用内置脚本：
+
+```bash
+pnpm new-post 我的新文章
+```
+
+这个脚本会自动生成带 frontmatter 模板的 Markdown 文件，文件名会自动转成英文小写加连字符的格式。
+
+值得一提的是 Fuwari 支持在 Markdown 中嵌入 Astro 组件——通过 rehype 插件实现了 GitHub 风格卡片、Admonition 提示块等扩展语法。比如用 `::github{repo="saicaca/fuwari"}` 可以在文章中嵌入一个仓库卡片。
+
+### 关于本地构建
+
+`pnpm build` 执行的不是单纯的 `astro build`，而是：
+
+```json
+"build": "astro build && pagefind --site dist"
+```
+
+`astro build` 生成静态文件到 `dist/` 目录，然后 **Pagefind** 扫描 `dist/` 中所有 HTML 文件，建立全文搜索索引。Pagefind 是独立于 Astro 的工具，所以需要分两步执行。好处是不依赖后端服务，索引完全在浏览器端加载，用户搜索时不需要请求服务器。
+
+构建产物就是 `dist/` 文件夹里的一堆 HTML、CSS、JS 和 Pagefind 的索引数据。如果配了 Sitemap 集成，还会额外生成 `sitemap-index.xml` 和 `sitemap-0.xml`。
+
+至此，本地博客已经跑起来了，剩下最后一步：让它上线。
